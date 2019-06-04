@@ -1,0 +1,37 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.7
+
+    working_directory: ~/repo
+
+    steps:
+      # Step 1: obtain repo from GitHub
+      - checkout
+      - setup_remote_docker:   # (2)
+          docker_layer_caching: true # (3)
+      # Step 2: create virtual env and install dependencies
+      - run:
+          name: install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+      # Step 3: run linter and tests
+      - run:
+          name: run tests
+          command: |
+            . venv/bin/activate
+            flake8 --exclude=venv* --statistics
+            pytest -v --cov=src
+      - run:
+          name: Build docker image
+          command: |
+            docker build -t dsmite/coding-test:$CIRCLE_SHA1 .
+      - run:
+          name: Push to DockerHub
+          command: |
+            echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_LOGIN --password-stdin 
+            docker push dsmite/coding-test:$CIRCLE_SHA1
+          
