@@ -2,7 +2,7 @@
 
 ### How to run
 ```shell
-python main.py
+python3.7 main.py
 ```
 
 ### Tests
