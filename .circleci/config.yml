@@ -28,10 +28,10 @@ jobs:
       - run:
           name: Build docker image
           command: |
-            docker build -t dsmite/coding-test:$CIRCLE_SHA1 .
+            docker build -t luanaddc/coding-test:$CIRCLE_SHA1 .
       - run:
           name: Push to DockerHub
           command: |
             echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_LOGIN --password-stdin 
-            docker push dsmite/coding-test:$CIRCLE_SHA1
+            docker push luanaddc/coding-test:$CIRCLE_SHA1
           
